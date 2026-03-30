@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WashGo Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --black2: #0e0e0e;
+  --black3: #141414;
+  --black4: #1a1a1a;
+  --black5: #222222;
+  --gold: #c9a84c;
+  --gold-light: #e8c96e;
+  --gold-dim: #7a6030;
+  --gold-glow: rgba(201,168,76,0.15);
+  --gold-glow2: rgba(201,168,76,0.08);
+  --white: #f5f0e8;
+  --white-dim: #8a8478;
+  --white-faint: #3a3830;
+  --border: rgba(201,168,76,0.15);
+  --border2: rgba(201,168,76,0.08);
+  --radius: 22px;
+  --radius-sm: 14px;
+  --radius-xs: 10px;
+  --ff-display: 'Cormorant Garamond', serif;
+  --ff-body: 'Outfit', sans-serif;
+  --ff-mono: 'DM Mono', monospace;
+  --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: var(--ff-body);
+  background: #050505;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ── PHONE SHELL ── */
+.phone {
+  width: 393px;
+  height: 852px;
+  background: var(--black);
+  border-radius: 52px;
+  border: 1.5px solid rgba(201,168,76,0.2);
+  box-shadow:
+    0 0 0 7px #0a0a0a,
+    0 0 0 8px rgba(201,168,76,0.08),
+    0 50px 120px rgba(0,0,0,0.9),
+    0 0 60px rgba(201,168,76,0.05);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dynamic-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 34px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.di-cam { width: 11px; height: 11px; background: #111; border-radius: 50%; border: 2px solid #0a0a0a; }
+.di-pill { width: 36px; height: 6px; background: #111; border-radius: 3px; }
+
+/* ── SCREENS ── */
+.screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1);
+  transform: translateY(8px);
+}
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.screen.exit {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* scrollable screens */
+.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scrollable::-webkit-scrollbar { display: none; }
+
+/* ════════════════════════════
+   SPLASH
+════════════════════════════ */
+#splash {
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.splash-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+}
+.splash-radial {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+}
+.splash-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.06);
+  animation: ringExpand 4s ease-out infinite;
+}
+.splash-ring:nth-child(1) { width: 200px; height: 200px; top: 50%; left: 50%; transform: translate(-50%,-55%); animation-delay: 0s; }
+.splash-ring:nth-child(2) { width: 320px; height: 320px; top: 50%; left: 50%; transform: translate(-50%,-55%); animation-delay: 1.3s; }
+.splash-ring:nth-child(3) { width: 440px; height: 440px; top: 50%; left: 50%; transform: translate(-50%,-55%); animation-delay: 2.6s; }
+@keyframes ringExpand {
+  0% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+.splash-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: splashReveal 1s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+@keyframes splashReveal {
+  from { opacity: 0; transform: translateY(30px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.splash-monogram {
+  width: 96px;
+  height: 96px;
+  border-radius: 30px;
+  background: linear-gradient(145deg, #1a1608, #0e0e0e);
+  border: 1px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  position: relative;
+  box-shadow: 0 0 40px rgba(201,168,76,0.12), inset 0 1px 0 rgba(201,168,76,0.1);
+}
+.splash-monogram::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 30px;
+  background: linear-gradient(145deg, rgba(201,168,76,0.3), transparent 50%, rgba(201,168,76,0.1));
+  pointer-events: none;
+}
+.splash-car { font-size: 42px; }
+.splash-wordmark {
+  font-family: var(--ff-display);
+  font-size: 52px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #e8c96e 0%, #c9a84c 40%, #8a6820 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.splash-tagline {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--white-dim);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.splash-divider {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 20px auto;
+}
+.splash-actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  animation: splashReveal 1s 0.25s cubic-bezier(0.16,1,0.3,1) both;
+}
+.btn-gold {
+  width: 280px;
+  padding: 17px;
+  background: linear-gradient(135deg, #c9a84c, #8a6820);
+  border: none;
+  border-radius: 16px;
+  color: #080808;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 30px rgba(201,168,76,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.btn-gold::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+.btn-gold:active::before { left: 150%; }
+.btn-gold:active { transform: scale(0.97); }
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--white-dim);
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 400;
+  padding: 14px 48px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: 0.3px;
+}
+.btn-ghost:active { background: rgba(201,168,76,0.05); border-color: var(--gold-dim); }
+
+/* ════════════════════════════
+   GLOBAL COMPONENTS
+════════════════════════════ */
+.page-top {
+  padding: 58px 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.back-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--black3);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 300;
+}
+.back-btn:active { background: var(--black4); }
+.page-title {
+  font-family: var(--ff-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.5px;
+}
+.gold-label {
+  font-family: var(--ff-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.section-head {
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.section-title {
+  font-family: var(--ff-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--white);
+}
+.section-link {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.card {
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+}
+.card-sm {
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+}
+
+/* ════════════════════════════
+   HOME
+════════════════════════════ */
+#home { padding-bottom: 88px; }
+.home-hero {
+  position: relative;
+  padding: 58px 24px 24px;
+  overflow: hidden;
+}
+.home-hero-glow {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
+  pointer-events: none;
+}
+.home-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.home-greeting { font-size: 13px; color: var(--white-dim); font-weight: 300; }
+.home-name {
+  font-family: var(--ff-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--white);
+  margin-top: 2px;
+  letter-spacing: 0.3px;
+}
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--black3);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+.icon-btn:active { background: var(--black4); }
+.icon-btn-dot {
+  position: absolute;
+  top: 9px; right: 10px;
+  width: 7px; height: 7px;
+  background: #d4a017;
+  border-radius: 50%;
+  border: 1.5px solid var(--black);
+}
+
+/* Live booking banner */
+.live-banner {
+  margin: 0 24px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.04));
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.live-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.live-banner:active { transform: scale(0.99); }
+.live-pulse {
+  width: 10px; height: 10px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: livePulse 2s ease infinite;
+  box-shadow: 0 0 8px var(--gold);
+}
+@keyframes livePulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+.live-info { flex: 1; }
+.live-tag { font-family: var(--ff-mono); font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+.live-title { font-family: var(--ff-body); font-size: 15px; font-weight: 500; color: var(--white); margin-top: 2px; }
+.live-sub { font-size: 12px; color: var(--white-dim); margin-top: 1px; }
+.live-arrow { color: var(--gold); font-size: 18px; }
+
+/* Quick services */
+.qa-grid {
+  margin: 20px 24px 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.qa-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.qa-tile-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: var(--transition);
+}
+.qa-tile-icon.gold-tint { background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.2); }
+.qa-tile:active .qa-tile-icon { transform: scale(0.92); background: var(--black4); }
+.qa-tile-lbl { font-size: 10px; color: var(--white-dim); text-align: center; letter-spacing: 0.2px; }
+
+/* Package cards */
+.pkg-scroll {
+  padding: 14px 24px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pkg-scroll::-webkit-scrollbar { display: none; }
+.pkg-tile {
+  min-width: 168px;
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.pkg-tile::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.pkg-tile.gold-pkg { border-color: rgba(201,168,76,0.25); background: linear-gradient(145deg, rgba(201,168,76,0.07), var(--black3)); }
+.pkg-tile.gold-pkg::after { opacity: 1; }
+.pkg-tile:active { transform: scale(0.97); }
+.pkg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--ff-mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.badge-popular { background: rgba(201,168,76,0.15); color: var(--gold); }
+.badge-fast { background: rgba(255,255,255,0.06); color: var(--white-dim); }
+.badge-elite { background: rgba(201,168,76,0.2); color: var(--gold-light); }
+.pkg-icon { font-size: 30px; margin-bottom: 10px; display: block; }
+.pkg-name { font-family: var(--ff-display); font-size: 18px; font-weight: 600; color: var(--white); }
+.pkg-desc { font-size: 11px; color: var(--white-dim); margin-top: 5px; line-height: 1.5; }
+.pkg-price { font-family: var(--ff-mono); font-size: 18px; color: var(--gold); margin-top: 14px; }
+.pkg-price span { font-size: 11px; color: var(--white-dim); }
+
+/* Washers */
+.washer-scroll {
+  padding: 12px 24px;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.washer-scroll::-webkit-scrollbar { display: none; }
+.washer-tile {
+  min-width: 130px;
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.washer-tile:active { transform: scale(0.95); }
+.w-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a160a, #2a2010);
+  border: 1.5px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  position: relative;
+  box-shadow: 0 0 15px rgba(201,168,76,0.1);
+}
+.w-online {
+  position: absolute;
+  bottom: 1px; right: 1px;
+  width: 12px; height: 12px;
+  background: #4caf7d;
+  border-radius: 50%;
+  border: 2px solid var(--black3);
+}
+.w-name { font-family: var(--ff-body); font-size: 13px; font-weight: 500; color: var(--white); }
+.w-stars { font-size: 11px; color: var(--gold); }
+.w-eta { font-family: var(--ff-mono); font-size: 10px; color: var(--white-dim); }
+
+/* Promo */
+.promo-card {
+  margin: 4px 24px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #100e06, #0e0e0e);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.promo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.promo-icon { font-size: 34px; }
+.promo-tag { font-family: var(--ff-mono); font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+.promo-title { font-family: var(--ff-display); font-size: 18px; font-weight: 600; color: var(--white); margin-top: 3px; }
+.promo-sub { font-size: 12px; color: var(--white-dim); margin-top: 2px; }
+
+/* ════════════════════════════
+   BOOKING WIZARD
+════════════════════════════ */
+#booking { padding-bottom: 100px; }
+.wizard-header {
+  padding: 58px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.wizard-top { display: flex; align-items: center; gap: 14px; }
+
+/* Step progress bar */
+.wizard-progress {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.wp-step {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.wp-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--white-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--white-dim);
+  background: var(--black3);
+  flex-shrink: 0;
+  transition: var(--transition);
+  position: relative;
+  z-index: 1;
+}
+.wp-dot.done { background: var(--gold); border-color: var(--gold); color: #080808; font-size: 13px; }
+.wp-dot.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: 0 0 12px rgba(201,168,76,0.3); }
+.wp-line {
+  flex: 1;
+  height: 1.5px;
+  background: var(--white-faint);
+  transition: background 0.5s ease;
+}
+.wp-line.done { background: var(--gold); }
+.wp-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.wp-label {
+  font-family: var(--ff-mono);
+  font-size: 8.5px;
+  letter-spacing: 1px;
+  color: var(--white-faint);
+  text-transform: uppercase;
+  transition: color 0.3s;
+  width: 60px;
+  text-align: center;
+}
+.wp-label:first-child { text-align: left; }
+.wp-label:last-child { text-align: right; }
+.wp-label.active { color: var(--gold); }
+.wp-label.done { color: var(--gold-dim); }
+
+/* Wizard slides */
+.wizard-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.wizard-slide {
+  position: absolute;
+  inset: 0;
+  padding: 24px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  transform: translateX(30px);
+}
+.wizard-slide::-webkit-scrollbar { display: none; }
+.wizard-slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.wizard-slide.exit-left { transform: translateX(-30px); opacity: 0; }
+.slide-title { font-family: var(--ff-display); font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+.slide-sub { font-size: 13px; color: var(--white-dim); margin-bottom: 20px; font-weight: 300; }
+
+/* Pkg select (step 1) */
+.pkg-select-grid { display: flex; flex-direction: column; gap: 12px; }
+.pkg-select-card {
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.pkg-select-card.selected { border-color: var(--gold); background: rgba(201,168,76,0.06); }
+.pkg-select-card:active { transform: scale(0.99); }
+.psc-icon { font-size: 32px; }
+.psc-info { flex: 1; }
+.psc-name { font-family: var(--ff-display); font-size: 18px; font-weight: 600; color: var(--white); }
+.psc-desc { font-size: 12px; color: var(--white-dim); margin-top: 3px; line-height: 1.4; }
+.psc-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.psc-tag { font-family: var(--ff-mono); font-size: 9px; padding: 3px 7px; border-radius: 5px; background: var(--black4); color: var(--white-dim); letter-spacing: 0.5px; }
+.psc-right { text-align: right; }
+.psc-price { font-family: var(--ff-mono); font-size: 18px; color: var(--gold); }
+.psc-time { font-size: 11px; color: var(--white-dim); margin-top: 3px; }
+.sel-ring { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--white-faint); margin-top: 6px; margin-left: auto; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+.pkg-select-card.selected .sel-ring { background: var(--gold); border-color: var(--gold); }
+.sel-ring::after { content: '✓'; font-size: 11px; color: #080808; opacity: 0; transition: opacity 0.2s; }
+.pkg-select-card.selected .sel-ring::after { opacity: 1; }
+
+/* Vehicle step */
+.vehicle-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.vehicle-card {
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.vehicle-card.selected { border-color: var(--gold); background: rgba(201,168,76,0.06); }
+.vehicle-card:active { transform: scale(0.96); }
+.vc-icon { font-size: 36px; margin-bottom: 10px; display: block; }
+.vc-name { font-family: var(--ff-body); font-size: 14px; font-weight: 500; color: var(--white); }
+.vc-note { font-size: 11px; color: var(--white-dim); margin-top: 3px; }
+
+/* Schedule step */
+.schedule-section { margin-bottom: 22px; }
+.sch-label { font-family: var(--ff-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.date-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.date-chips::-webkit-scrollbar { display: none; }
+.date-chip {
+  min-width: 60px;
+  padding: 12px 10px;
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-xs);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.date-chip.selected { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+.date-chip:active { transform: scale(0.95); }
+.dc-day { font-family: var(--ff-mono); font-size: 9px; color: var(--white-dim); letter-spacing: 1px; text-transform: uppercase; }
+.dc-num { font-family: var(--ff-display); font-size: 22px; font-weight: 600; color: var(--white); margin-top: 2px; }
+.date-chip.selected .dc-day, .date-chip.selected .dc-num { color: var(--gold); }
+.time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.time-chip {
+  padding: 12px 8px;
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-xs);
+  text-align: center;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--white-dim);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.time-chip.selected { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+.time-chip.unavail { opacity: 0.3; pointer-events: none; }
+.time-chip:active:not(.unavail) { transform: scale(0.96); }
+
+/* Addons step */
+.addons-list { display: flex; flex-direction: column; gap: 10px; }
+.addon-card {
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.addon-card.selected { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.05); }
+.addon-card:active { transform: scale(0.99); }
+.addon-icon { font-size: 26px; width: 44px; height: 44px; background: var(--black4); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.addon-info { flex: 1; }
+.addon-name { font-family: var(--ff-body); font-size: 14px; font-weight: 500; color: var(--white); }
+.addon-desc { font-size: 11px; color: var(--white-dim); margin-top: 2px; }
+.addon-price { font-family: var(--ff-mono); font-size: 14px; color: var(--gold); margin-right: 4px; }
+.check-box { width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--white-faint); display: flex; align-items: center; justify-content: center; transition: var(--transition); font-size: 12px; color: #080808; flex-shrink: 0; }
+.addon-card.selected .check-box { background: var(--gold); border-color: var(--gold); }
+
+/* Review step */
+.review-summary {
+  background: var(--black3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.rs-header {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.08), transparent);
+  border-bottom: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rs-header-icon { font-size: 24px; }
+.rs-header-title { font-family: var(--ff-display); font-size: 18px; font-weight: 600; }
+.rs-row {
+  padding: 13px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border2);
+}
+.rs-row:last-child { border-bottom: none; }
+.rs-key { font-size: 12px; color: var(--white-dim); }
+.rs-val { font-family: var(--ff-body); font-size: 13px; font-weight: 500; color: var(--white); }
+.rs-total-key { font-family: var(--ff-display); font-size: 17px; font-weight: 600; }
+.rs-total-val { font-family: var(--ff-mono); font-size: 20px; color: var(--gold); }
+
+/* Address input */
+.address-card {
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 14px;
+}
+.address-card:active { border-color: var(--gold-dim); }
+.addr-icon { font-size: 22px; }
+.addr-body { flex: 1; }
+.addr-lbl { font-family: var(--ff-mono); font-size: 9px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+.addr-val { font-size: 14px; color: var(--white); margin-top: 3px; font-weight: 400; }
+.addr-change { font-family: var(--ff-mono); font-size: 10px; color: var(--gold); letter-spacing: 1px; }
+
+/* Payment */
+.payment-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.pay-option {
+  flex: 1;
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.pay-option.selected { border-color: var(--gold); background: rgba(201,168,76,0.06); }
+.pay-option:active { transform: scale(0.96); }
+.pay-icon { font-size: 22px; display: block; margin-bottom: 5px; }
+.pay-lbl { font-family: var(--ff-mono); font-size: 9px; letter-spacing: 1px; color: var(--white-dim); text-transform: uppercase; }
+.pay-option.selected .pay-lbl { color: var(--gold); }
+
+/* Wizard footer */
+.wizard-footer {
+  padding: 0 24px 20px;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  background: linear-gradient(0deg, var(--black) 60%, transparent);
+}
+.btn-back-wizard {
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  background: var(--black3);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--white-dim);
+  font-size: 20px;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.btn-back-wizard:active { background: var(--black4); }
+.btn-next {
+  flex: 1;
+  padding: 16px;
+  background: linear-gradient(135deg, #c9a84c, #8a6820);
+  border: none;
+  border-radius: 15px;
+  color: #080808;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 24px rgba(201,168,76,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.btn-next:active { transform: scale(0.98); }
+
+/* ════════════════════════════
+   TRACKING
+════════════════════════════ */
+#tracking { padding-bottom: 88px; }
+.map-area {
+  height: 270px;
+  background: var(--black2);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.map-bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.map-road { position: absolute; background: rgba(201,168,76,0.1); }
+.map-road.h { height: 2px; left: 0; right: 0; }
+.map-road.v { width: 2px; top: 0; bottom: 0; }
+.map-glow-spot {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.12), transparent 70%);
+}
+.map-pin { position: absolute; font-size: 28px; filter: drop-shadow(0 0 8px rgba(201,168,76,0.6)); }
+.map-van { position: absolute; font-size: 24px; animation: vanMove 5s ease-in-out infinite alternate; filter: drop-shadow(0 0 6px rgba(201,168,76,0.4)); }
+@keyframes vanMove { 0% { transform: translate(0,0); } 100% { transform: translate(22px,-14px); } }
+.map-route-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-overlay-top {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(180deg, rgba(8,8,8,0.9), transparent);
+  display: flex;
+  align-items: flex-start;
+  padding: 58px 24px 0;
+  gap: 14px;
+}
+.map-overlay-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: linear-gradient(0deg, var(--black), transparent);
+}
+
+.eta-hero {
+  margin: 16px 24px 0;
+  padding: 20px 22px;
+  background: var(--black3);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+.eta-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.eta-num {
+  font-family: var(--ff-display);
+  font-size: 60px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-right: 4px;
+}
+.eta-unit-stack { display: flex; flex-direction: column; justify-content: center; margin-right: auto; }
+.eta-unit { font-family: var(--ff-mono); font-size: 10px; letter-spacing: 2px; color: var(--white-dim); text-transform: uppercase; }
+.eta-label { font-family: var(--ff-mono); font-size: 9px; color: var(--gold-dim); letter-spacing: 1.5px; margin-top: 3px; text-transform: uppercase; }
+.eta-divider { width: 1px; height: 48px; background: var(--border); margin: 0 18px; }
+.eta-details {}
+.eta-detail-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.eta-detail-row:last-child { margin-bottom: 0; }
+.eta-d-key { font-size: 11px; color: var(--white-dim); }
+.eta-d-val { font-family: var(--ff-mono); font-size: 12px; color: var(--white); }
+
+/* Steps */
+.steps-card {
+  margin: 14px 24px 0;
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.steps-card-title { font-family: var(--ff-display); font-size: 17px; font-weight: 600; margin-bottom: 16px; color: var(--white); }
+.step-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 0 0 18px;
+  position: relative;
+}
+.step-row:last-child { padding-bottom: 0; }
+.step-row:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 16px; top: 34px;
+  width: 1.5px;
+  height: calc(100% - 16px);
+  background: var(--white-faint);
+}
+.step-row.done:not(:last-child)::after { background: var(--gold-dim); }
+.step-dot {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--white-faint);
+  background: var(--black4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: var(--transition);
+  z-index: 1;
+}
+.step-row.done .step-dot { background: var(--gold); border-color: var(--gold); color: #080808; }
+.step-row.current .step-dot { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); animation: stepGlow 2s ease infinite; }
+@keyframes stepGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.3); } 50% { box-shadow: 0 0 0 6px rgba(201,168,76,0); } }
+.step-body { padding-top: 7px; }
+.step-ttl { font-family: var(--ff-body); font-size: 14px; font-weight: 500; color: var(--white); }
+.step-sub { font-size: 11px; color: var(--white-dim); margin-top: 2px; }
+.step-time { font-family: var(--ff-mono); font-size: 10px; color: var(--gold); margin-top: 3px; }
+
+/* Washer card */
+.washer-detail-card {
+  margin: 14px 24px 0;
+  padding: 18px;
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+}
+.wd-avatar {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a160a, #2a2010);
+  border: 1.5px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(201,168,76,0.12);
+}
+.wd-info { flex: 1; }
+.wd-name { font-family: var(--ff-display); font-size: 18px; font-weight: 600; color: var(--white); }
+.wd-sub { font-size: 12px; color: var(--white-dim); margin-top: 2px; }
+.wd-stars { font-size: 12px; color: var(--gold); margin-top: 3px; }
+.wd-actions { display: flex; gap: 8px; }
+.wd-btn {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--black4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.wd-btn:active { background: var(--black5); }
+.wd-btn.gold { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.25); }
+
+/* ════════════════════════════
+   WASHER PROFILE
+════════════════════════════ */
+#washer-profile { padding-bottom: 88px; }
+.wp-hero {
+  padding: 58px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: linear-gradient(180deg, rgba(201,168,76,0.05) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border2);
+}
+.wp-hero::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+.wp-big-avatar {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a2010, #1a160a);
+  border: 2px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  box-shadow: 0 0 30px rgba(201,168,76,0.15);
+  position: relative;
+}
+.wp-verified { position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; background: var(--gold); border-radius: 50%; border: 2px solid var(--black); display: flex; align-items: center; justify-content: center; font-size: 11px; }
+.wp-name { font-family: var(--ff-display); font-size: 26px; font-weight: 600; color: var(--white); margin-top: 12px; }
+.wp-role { font-family: var(--ff-mono); font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-top: 4px; }
+.wp-stars-row { display: flex; align-items: center; gap: 6px; margin-top: 10px; justify-content: center; }
+.wp-stars-big { font-size: 16px; color: var(--gold); letter-spacing: 2px; }
+.wp-rating-num { font-family: var(--ff-display); font-size: 22px; font-weight: 600; color: var(--white); }
+.wp-rating-count { font-size: 12px; color: var(--white-dim); }
+.wp-stats-row { display: flex; gap: 0; margin-top: 20px; width: 100%; background: var(--black3); border: 1px solid var(--border2); border-radius: var(--radius-sm); overflow: hidden; }
+.wp-stat { flex: 1; padding: 14px 8px; text-align: center; }
+.wp-stat:not(:last-child) { border-right: 1px solid var(--border2); }
+.wp-stat-num { font-family: var(--ff-display); font-size: 22px; font-weight: 700; color: var(--gold); }
+.wp-stat-lbl { font-family: var(--ff-mono); font-size: 9px; color: var(--white-dim); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+.wp-section { margin: 18px 24px 0; }
+.wp-section-title { font-family: var(--ff-display); font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 12px; }
+.wp-services { display: flex; flex-wrap: wrap; gap: 8px; }
+.wp-service-chip { padding: 7px 13px; background: var(--black3); border: 1px solid var(--border2); border-radius: 20px; font-size: 12px; color: var(--white-dim); display: flex; align-items: center; gap: 5px; }
+.wp-service-chip span { font-size: 14px; }
+.wp-reviews { display: flex; flex-direction: column; gap: 10px; }
+.wp-review-card {
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.wpr-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.wpr-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--black5); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.wpr-name { font-size: 13px; font-weight: 500; color: var(--white); }
+.wpr-stars { font-size: 11px; color: var(--gold); margin-top: 1px; }
+.wpr-date { font-family: var(--ff-mono); font-size: 9px; color: var(--white-faint); margin-left: auto; }
+.wpr-text { font-size: 12px; color: var(--white-dim); line-height: 1.55; }
+
+.wp-book-btn {
+  margin: 20px 24px 0;
+  width: calc(100% - 48px);
+  padding: 17px;
+  background: linear-gradient(135deg, #c9a84c, #8a6820);
+  border: none;
+  border-radius: 16px;
+  color: #080808;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(201,168,76,0.2);
+  transition: var(--transition);
+  letter-spacing: 0.5px;
+}
+.wp-book-btn:active { transform: scale(0.98); }
+
+/* ════════════════════════════
+   RATING SCREEN
+════════════════════════════ */
+#rating { padding-bottom: 88px; }
+.rating-hero {
+  padding: 58px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1px solid var(--border2);
+}
+.rating-check {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+  border: 1.5px solid rgba(201,168,76,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  margin-bottom: 16px;
+  animation: checkPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes checkPop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.rating-title { font-family: var(--ff-display); font-size: 28px; font-weight: 600; color: var(--white); }
+.rating-sub { font-size: 14px; color: var(--white-dim); margin-top: 6px; font-weight: 300; }
+.rating-order { font-family: var(--ff-mono); font-size: 11px; color: var(--gold); margin-top: 8px; letter-spacing: 2px; }
+
+.rating-washer-mini {
+  margin: 20px 24px 0;
+  padding: 16px 18px;
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.rwm-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #2a2010, #1a160a); border: 1.5px solid var(--gold-dim); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+.rwm-info { flex: 1; }
+.rwm-name { font-family: var(--ff-display); font-size: 17px; font-weight: 600; }
+.rwm-service { font-size: 12px; color: var(--white-dim); margin-top: 2px; }
+
+/* Star rating */
+.star-rating-section { margin: 22px 24px 0; text-align: center; }
+.star-rating-label { font-family: var(--ff-mono); font-size: 10px; letter-spacing: 2px; color: var(--white-dim); text-transform: uppercase; margin-bottom: 16px; }
+.stars-row { display: flex; justify-content: center; gap: 10px; }
+.star-btn {
+  font-size: 40px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  filter: grayscale(1) brightness(0.4);
+  line-height: 1;
+}
+.star-btn.lit { filter: none; transform: scale(1.1); }
+.star-btn:active { transform: scale(1.25); }
+
+/* Quick tags */
+.quick-tags-section { margin: 20px 24px 0; }
+.qt-label { font-family: var(--ff-mono); font-size: 10px; letter-spacing: 2px; color: var(--white-dim); text-transform: uppercase; margin-bottom: 12px; }
+.qt-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.qt-tag {
+  padding: 9px 14px;
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--white-dim);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.qt-tag.selected { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
+.qt-tag:active { transform: scale(0.96); }
+
+/* Comment box */
+.comment-section { margin: 20px 24px 0; }
+.comment-box {
+  width: 100%;
+  background: var(--black3);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  color: var(--white);
+  font-family: var(--ff-body);
+  font-size: 14px;
+  font-weight: 300;
+  resize: none;
+  outline: none;
+  height: 90px;
+  transition: border-color 0.3s;
+}
+.comment-box:focus { border-color: var(--gold-dim); }
+.comment-box::placeholder { color: var(--white-faint); }
+
+.submit-rating-btn {
+  margin: 16px 24px 0;
+  width: calc(100% - 48px);
+  padding: 17px;
+  background: linear-gradient(135deg, #c9a84c, #8a6820);
+  border: none;
+  border-radius: 16px;
+  color: #080808;
+  font-family: var(--ff-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(201,168,76,0.2);
+  transition: var(--transition);
+}
+.submit-rating-btn:active { transform: scale(0.98); }
+
+/* ════════════════════════════
+   PROFILE
+════════════════════════════ */
+#profile { padding-bottom: 88px; }
+.profile-hero {
+  height: 230px;
+  background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.profile-hero::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+.profile-hero-top {
+  position: absolute;
+  top: 56px; left: 0; right: 0;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.profile-page-title { font-family: var(--ff-display); font-size: 24px; font-weight: 600; color: var(--white); }
+.p-avatar-wrap {
+  position: absolute;
+  bottom: -44px; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.p-avatar {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a2010, #1a160a);
+  border: 2px solid var(--gold-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 20px rgba(201,168,76,0.1);
+}
+.p-name-section { margin-top: 52px; text-align: center; padding: 0 24px; }
+.p-name { font-family: var(--ff-display); font-size: 26px; font-weight: 600; color: var(--white); }
+.p-sub { font-size: 13px; color: var(--white-dim); margin-top: 4px; font-weight: 300; }
+.p-tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 14px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 20px;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+.p-stats { display: flex; margin: 18px 24px 0; background: var(--black3); border: 1px solid var(--border2); border-radius: var(--radius-sm); overflow: hidden; }
+.p-stat { flex: 1; padding: 16px 8px; text-align: center; }
+.p-stat:not(:last-child) { border-right: 1px solid var(--border2); }
+.p-stat-num { font-family: var(--ff-display); font-size: 24px; font-weight: 700; color: var(--gold); }
+.p-stat-lbl { font-family: var(--ff-mono); font-size: 9px; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+.p-menu-section { margin: 20px 24px 0; }
+.p-menu-group-lbl { font-family: var(--ff-mono); font-size: 9px; letter-spacing: 2px; color: var(--white-faint); text-transform: uppercase; margin-bottom: 8px; }
+.p-menu-list { display: flex; flex-direction: column; gap: 5px; }
+.p-menu-item {
+  background: var(--black3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.p-menu-item:active { background: var(--black4); }
+.p-menu-icon { width: 38px; height: 38px; border-radius: 11px; background: var(--black4); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.p-menu-body { flex: 1; }
+.p-menu-title { font-family: var(--ff-body); font-size: 14px; font-weight: 500; color: var(--white); }
+.p-menu-sub { font-size: 11px; color: var(--white-dim); margin-top: 2px; }
+.p-menu-right { color: var(--white-faint); font-size: 18px; font-weight: 300; }
+
+/* ════════════════════════════
+   BOTTOM NAV
+════════════════════════════ */
+.bottom-nav {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 82px;
+  background: rgba(10,10,10,0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border2);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px 12px;
+  z-index: 100;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 14px;
+  transition: var(--transition);
+  position: relative;
+}
+.nav-item.active { background: rgba(201,168,76,0.07); }
+.nav-icon { font-size: 21px; }
+.nav-lbl {
+  font-family: var(--ff-mono);
+  font-size: 8.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--white-faint);
+  transition: color 0.3s;
+}
+.nav-item.active .nav-lbl { color: var(--gold); }
+.nav-badge { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; background: var(--gold); border-radius: 50%; border: 1.5px solid var(--black); }
+.nav-fab {
+  width: 54px; height: 54px;
+  background: linear-gradient(135deg, #c9a84c, #8a6820);
+  border: none;
+  border-radius: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+  transition: var(--transition);
+  transform: translateY(-8px);
+}
+.nav-fab:active { transform: translateY(-8px) scale(0.94); }
+
+/* ════════════════════════════
+   ANIMATIONS
+════════════════════════════ */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-1 { animation: fadeSlideUp 0.5s 0.05s both; }
+.anim-2 { animation: fadeSlideUp 0.5s 0.12s both; }
+.anim-3 { animation: fadeSlideUp 0.5s 0.19s both; }
+.anim-4 { animation: fadeSlideUp 0.5s 0.26s both; }
+.anim-5 { animation: fadeSlideUp 0.5s 0.33s both; }
+.anim-6 { animation: fadeSlideUp 0.5s 0.40s both; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="dynamic-island">
+    <div class="di-cam"></div>
+    <div class="di-pill"></div>
+  </div>
+
+  <!-- ════ SPLASH ════ -->
+  <div id="splash" class="screen active">
+    <div class="splash-noise"></div>
+    <div class="splash-radial"></div>
+    <div class="splash-ring"></div>
+    <div class="splash-ring"></div>
+    <div class="splash-ring"></div>
+    <div class="splash-content">
+      <div class="splash-monogram"><div class="splash-car">🚗</div></div>
+      <div class="splash-wordmark">WashGo</div>
+      <div class="splash-tagline">Premium Home Car Wash · PH</div>
+      <div class="splash-divider"></div>
+    </div>
+    <div class="splash-actions">
+      <button class="btn-gold" onclick="goTo('home')">Get Started</button>
+      <button class="btn-ghost" onclick="goTo('home')">Sign In to Account</button>
+    </div>
+  </div>
+
+  <!-- ════ HOME ════ -->
+  <div id="home" class="screen scrollable">
+    <div class="home-hero">
+      <div class="home-hero-glow"></div>
+      <div class="home-top-row">
+        <div>
+          <div class="home-greeting">Good afternoon ☀️</div>
+          <div class="home-name">Juan dela Cruz</div>
+        </div>
+        <div class="icon-btn" onclick="goTo('tracking')">
+          🔔<div class="icon-btn-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="live-banner anim-1" onclick="goTo('tracking')">
+      <div class="live-pulse"></div>
+      <div class="live-info">
+        <div class="live-tag">Live Booking</div>
+        <div class="live-title">Kuya Marco is on the way</div>
+        <div class="live-sub">ETA 12 mins · Premium Wash · ₱350</div>
+      </div>
+      <div class="live-arrow">›</div>
+    </div>
+
+    <div class="qa-grid anim-2">
+      <div class="qa-tile" onclick="goTo('booking')">
+        <div class="qa-tile-icon gold-tint">🧼</div>
+        <div class="qa-tile-lbl">Book Wash</div>
+      </div>
+      <div class="qa-tile">
+        <div class="qa-tile-icon">📋</div>
+        <div class="qa-tile-lbl">My Orders</div>
+      </div>
+      <div class="qa-tile" onclick="goTo('rating')">
+        <div class="qa-tile-icon">⭐</div>
+        <div class="qa-tile-lbl">Rate &amp; Review</div>
+      </div>
+      <div class="qa-tile" onclick="goTo('profile')">
+        <div class="qa-tile-icon">💳</div>
+        <div class="qa-tile-lbl">My Points</div>
+      </div>
+    </div>
+
+    <div class="section-head anim-3" style="margin-top:24px;">
+      <div class="section-title">Packages</div>
+      <div class="section-link">All →</div>
+    </div>
+    <div class="pkg-scroll anim-3">
+      <div class="pkg-tile gold-pkg" onclick="goTo('booking')">
+        <div class="pkg-badge badge-popular">★ Popular</div>
+        <span class="pkg-icon">✨</span>
+        <div class="pkg-name">Premium Wash</div>
+        <div class="pkg-desc">Exterior + interior vacuum, dashboard wipe</div>
+        <div class="pkg-price">₱350 <span>/ session</span></div>
+      </div>
+      <div class="pkg-tile" onclick="goTo('booking')">
+        <div class="pkg-badge badge-fast">⚡ Fast</div>
+        <span class="pkg-icon">💦</span>
+        <div class="pkg-name">Quick Rinse</div>
+        <div class="pkg-desc">Exterior only, done in 20 mins flat</div>
+        <div class="pkg-price">₱150 <span>/ session</span></div>
+      </div>
+      <div class="pkg-tile" onclick="goTo('booking')">
+        <div class="pkg-badge badge-elite">♛ Elite</div>
+        <span class="pkg-icon">👑</span>
+        <div class="pkg-name">Full Detail</div>
+        <div class="pkg-desc">Complete in/out, wax, polish &amp; ceramic</div>
+        <div class="pkg-price">₱699 <span>/ session</span></div>
+      </div>
+    </div>
+
+    <div class="section-head anim-4" style="margin-top:20px;">
+      <div class="section-title">Nearby Washers</div>
+      <div class="section-link">Map →</div>
+    </div>
+    <div class="washer-scroll anim-4">
+      <div class="washer-tile" onclick="goTo('washer-profile')">
+        <div class="w-avatar">👨‍🔧<div class="w-online"></div></div>
+        <div class="w-name">Marco R.</div>
+        <div class="w-stars">★ 4.9</div>
+        <div class="w-eta">~8 mins</div>
+      </div>
+      <div class="washer-tile" onclick="goTo('washer-profile')">
+        <div class="w-avatar">👩‍🔧<div class="w-online"></div></div>
+        <div class="w-name">Ana L.</div>
+        <div class="w-stars">★ 4.8</div>
+        <div class="w-eta">~12 mins</div>
+      </div>
+      <div class="washer-tile" onclick="goTo('washer-profile')">
+        <div class="w-avatar">👨‍🔧<div class="w-online"></div></div>
+        <div class="w-name">Ryan S.</div>
+        <div class="w-stars">★ 4.7</div>
+        <div class="w-eta">~18 mins</div>
+      </div>
+      <div class="washer-tile" onclick="goTo('washer-profile')">
+        <div class="w-avatar">👨‍🔧<div class="w-online"></div></div>
+        <div class="w-name">Ben T.</div>
+        <div class="w-stars">★ 5.0</div>
+        <div class="w-eta">~22 mins</div>
+      </div>
+    </div>
+
+    <div class="promo-card anim-5" style="margin-bottom:0;">
+      <div class="promo-icon">🎁</div>
+      <div>
+        <div class="promo-tag">Limited Offer</div>
+        <div class="promo-title">30% off your 2nd wash</div>
+        <div class="promo-sub">Code: WASHGO30 · Ends Mar 31</div>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+  </div>
+
+  <!-- ════ BOOKING WIZARD ════ -->
+  <div id="booking" class="screen" style="display:flex;flex-direction:column;">
+    <div class="wizard-header">
+      <div class="wizard-top">
+        <div class="back-btn" onclick="goTo('home')">‹</div>
+        <div>
+          <div class="gold-label">New Booking</div>
+          <div class="page-title">Book a Wash</div>
+        </div>
+      </div>
+      <div>
+        <div class="wizard-progress">
+          <div class="wp-step">
+            <div class="wp-dot active" id="wd0">1</div>
+            <div class="wp-line" id="wl0"></div>
+          </div>
+          <div class="wp-step">
+            <div class="wp-dot" id="wd1">2</div>
+            <div class="wp-line" id="wl1"></div>
+          </div>
+          <div class="wp-step">
+            <div class="wp-dot" id="wd2">3</div>
+            <div class="wp-line" id="wl2"></div>
+          </div>
+          <div class="wp-step">
+            <div class="wp-dot" id="wd3">4</div>
+            <div class="wp-line" id="wl3"></div>
+          </div>
+          <div class="wp-step" style="flex:0;">
+            <div class="wp-dot" id="wd4">5</div>
+          </div>
+        </div>
+        <div class="wp-labels">
+          <div class="wp-label active" id="wlbl0">Package</div>
+          <div class="wp-label" id="wlbl1">Vehicle</div>
+          <div class="wp-label" id="wlbl2">Schedule</div>
+          <div class="wp-label" id="wlbl3">Add-ons</div>
+          <div class="wp-label" id="wlbl4">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-body">
+      <!-- Step 0: Package -->
+      <div class="wizard-slide active" id="ws0">
+        <div class="slide-title">Choose Package</div>
+        <div class="slide-sub">Select the wash type that suits your car</div>
+        <div class="pkg-select-grid">
+          <div class="pkg-select-card selected" onclick="selectWizardPkg(this,150,'Quick Rinse')">
+            <div class="psc-icon">💦</div>
+            <div class="psc-info">
+              <div class="psc-name">Quick Rinse</div>
+              <div class="psc-desc">Exterior rinse and hand dry. Done in 20 minutes.</div>
+              <div class="psc-tags"><span class="psc-tag">20 mins</span><span class="psc-tag">Exterior</span></div>
+            </div>
+            <div class="psc-right">
+              <div class="psc-price">₱150</div>
+              <div class="psc-time">~20 min</div>
+              <div class="sel-ring"></div>
+            </div>
+          </div>
+          <div class="pkg-select-card" onclick="selectWizardPkg(this,350,'Premium Wash')">
+            <div class="psc-icon">✨</div>
+            <div class="psc-info">
+              <div class="psc-name">Premium Wash</div>
+              <div class="psc-desc">Exterior + interior vacuum, dashboard &amp; window wipe.</div>
+              <div class="psc-tags"><span class="psc-tag">45 mins</span><span class="psc-tag">In + Out</span><span class="psc-tag">Popular</span></div>
+            </div>
+            <div class="psc-right">
+              <div class="psc-price">₱350</div>
+              <div class="psc-time">~45 min</div>
+              <div class="sel-ring"></div>
+            </div>
+          </div>
+          <div class="pkg-select-card" onclick="selectWizardPkg(this,699,'Full Detail')">
+            <div class="psc-icon">👑</div>
+            <div class="psc-info">
+              <div class="psc-name">Full Detail</div>
+              <div class="psc-desc">Complete in/out cleaning, wax, polish &amp; ceramic coat.</div>
+              <div class="psc-tags"><span class="psc-tag">90 mins</span><span class="psc-tag">Full Detail</span><span class="psc-tag">Elite</span></div>
+            </div>
+            <div class="psc-right">
+              <div class="psc-price">₱699</div>
+              <div class="psc-time">~90 min</div>
+              <div class="sel-ring"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: Vehicle -->
+      <div class="wizard-slide" id="ws1">
+        <div class="slide-title">Your Vehicle</div>
+        <div class="slide-sub">Select your vehicle type for accurate pricing</div>
+        <div class="vehicle-grid">
+          <div class="vehicle-card selected" onclick="selectVehicle(this)">
+            <span class="vc-icon">🚗</span>
+            <div class="vc-name">Sedan</div>
+            <div class="vc-note">Standard size</div>
+          </div>
+          <div class="vehicle-card" onclick="selectVehicle(this)">
+            <span class="vc-icon">🚙</span>
+            <div class="vc-name">SUV / Crossover</div>
+            <div class="vc-note">+₱50 surcharge</div>
+          </div>
+          <div class="vehicle-card" onclick="selectVehicle(this)">
+            <span class="vc-icon">🚐</span>
+            <div class="vc-name">Van / AUV</div>
+            <div class="vc-note">+₱80 surcharge</div>
+          </div>
+          <div class="vehicle-card" onclick="selectVehicle(this)">
+            <span class="vc-icon">🛻</span>
+            <div class="vc-name">Pickup Truck</div>
+            <div class="vc-note">+₱70 surcharge</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Schedule -->
+      <div class="wizard-slide" id="ws2">
+        <div class="slide-title">Schedule</div>
+        <div class="slide-sub">Pick your preferred date and time</div>
+        <div class="schedule-section">
+          <div class="sch-label">Date</div>
+          <div class="date-chips">
+            <div class="date-chip selected" onclick="selectDate(this)"><div class="dc-day">Today</div><div class="dc-num">30</div></div>
+            <div class="date-chip" onclick="selectDate(this)"><div class="dc-day">Tue</div><div class="dc-num">31</div></div>
+            <div class="date-chip" onclick="selectDate(this)"><div class="dc-day">Wed</div><div class="dc-num">1</div></div>
+            <div class="date-chip" onclick="selectDate(this)"><div class="dc-day">Thu</div><div class="dc-num">2</div></div>
+            <div class="date-chip" onclick="selectDate(this)"><div class="dc-day">Fri</div><div class="dc-num">3</div></div>
+            <div class="date-chip" onclick="selectDate(this)"><div class="dc-day">Sat</div><div class="dc-num">4</div></div>
+          </div>
+        </div>
+        <div class="schedule-section">
+          <div class="sch-label">Time Slot</div>
+          <div class="time-grid">
+            <div class="time-chip unavail">8:00 AM</div>
+            <div class="time-chip unavail">9:00 AM</div>
+            <div class="time-chip" onclick="selectTime(this)">10:00 AM</div>
+            <div class="time-chip" onclick="selectTime(this)">11:00 AM</div>
+            <div class="time-chip" onclick="selectTime(this)">12:00 PM</div>
+            <div class="time-chip unavail">1:00 PM</div>
+            <div class="time-chip selected" onclick="selectTime(this)">2:00 PM</div>
+            <div class="time-chip" onclick="selectTime(this)">3:00 PM</div>
+            <div class="time-chip" onclick="selectTime(this)">4:00 PM</div>
+            <div class="time-chip" onclick="selectTime(this)">5:00 PM</div>
+            <div class="time-chip" onclick="selectTime(this)">6:00 PM</div>
+            <div class="time-chip unavail">7:00 PM</div>
+          </div>
+        </div>
+        <div class="address-card">
+          <div class="addr-icon">📍</div>
+          <div class="addr-body">
+            <div class="addr-lbl">Service Location</div>
+            <div class="addr-val">123 Moonwalk St, Las Piñas City</div>
+          </div>
+          <div class="addr-change">Change</div>
+        </div>
+      </div>
+
+      <!-- Step 3: Add-ons -->
+      <div class="wizard-slide" id="ws3">
+        <div class="slide-title">Add-ons</div>
+        <div class="slide-sub">Enhance your wash experience</div>
+        <div class="addons-list">
+          <div class="addon-card" onclick="toggleAddon(this,80)">
+            <div class="addon-icon">🪟</div>
+            <div class="addon-info">
+              <div class="addon-name">Window Tint Care</div>
+              <div class="addon-desc">Streak-free interior &amp; exterior glass clean</div>
+            </div>
+            <div class="addon-price">+₱80</div>
+            <div class="check-box">✓</div>
+          </div>
+          <div class="addon-card" onclick="toggleAddon(this,120)">
+            <div class="addon-icon">🌸</div>
+            <div class="addon-info">
+              <div class="addon-name">Premium Scent</div>
+              <div class="addon-desc">Long-lasting luxury car air freshener</div>
+            </div>
+            <div class="addon-price">+₱120</div>
+            <div class="check-box">✓</div>
+          </div>
+          <div class="addon-card" onclick="toggleAddon(this,150)">
+            <div class="addon-icon">💎</div>
+            <div class="addon-info">
+              <div class="addon-name">Tire Shine</div>
+              <div class="addon-desc">Deep black gloss rubber dressing</div>
+            </div>
+            <div class="addon-price">+₱150</div>
+            <div class="check-box">✓</div>
+          </div>
+          <div class="addon-card" onclick="toggleAddon(this,200)">
+            <div class="addon-icon">🛡️</div>
+            <div class="addon-info">
+              <div class="addon-name">Ceramic Coat Spray</div>
+              <div class="addon-desc">Nano-ceramic protection layer</div>
+            </div>
+            <div class="addon-price">+₱200</div>
+            <div class="check-box">✓</div>
+          </div>
+          <div class="addon-card" onclick="toggleAddon(this,100)">
+            <div class="addon-icon">🪑</div>
+            <div class="addon-info">
+              <div class="addon-name">Seat Wipe Down</div>
+              <div class="addon-desc">Leather &amp; fabric seat cleaning</div>
+            </div>
+            <div class="addon-price">+₱100</div>
+            <div class="check-box">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Review + Pay -->
+      <div class="wizard-slide" id="ws4">
+        <div class="slide-title">Review &amp; Pay</div>
+        <div class="slide-sub">Confirm your booking details</div>
+        <div class="review-summary">
+          <div class="rs-header">
+            <div class="rs-header-icon">📋</div>
+            <div class="rs-header-title">Booking Summary</div>
+          </div>
+          <div class="rs-row"><span class="rs-key">Package</span><span class="rs-val" id="rs-pkg">Quick Rinse</span></div>
+          <div class="rs-row"><span class="rs-key">Vehicle</span><span class="rs-val">Sedan</span></div>
+          <div class="rs-row"><span class="rs-key">Date &amp; Time</span><span class="rs-val">Today · 2:00 PM</span></div>
+          <div class="rs-row"><span class="rs-key">Location</span><span class="rs-val">Moonwalk, Las Piñas</span></div>
+          <div class="rs-row"><span class="rs-key">Add-ons</span><span class="rs-val" id="rs-addons">None</span></div>
+          <div class="rs-row"><span class="rs-key">Service Fee</span><span class="rs-val">₱20</span></div>
+          <div class="rs-row"><span class="rs-total-key">Total</span><span class="rs-total-val" id="rs-total">₱170</span></div>
+        </div>
+        <div class="sch-label" style="margin-bottom:10px;">Payment Method</div>
+        <div class="payment-row">
+          <div class="pay-option selected" onclick="selectPay(this)">
+            <span class="pay-icon">💚</span>
+            <div class="pay-lbl">GCash</div>
+          </div>
+          <div class="pay-option" onclick="selectPay(this)">
+            <span class="pay-icon">💙</span>
+            <div class="pay-lbl">Maya</div>
+          </div>
+          <div class="pay-option" onclick="selectPay(this)">
+            <span class="pay-icon">💵</span>
+            <div class="pay-lbl">Cash</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-footer">
+      <div class="btn-back-wizard" id="wiz-back-btn" onclick="wizBack()" style="display:none;">‹</div>
+      <button class="btn-next" id="wiz-next-btn" onclick="wizNext()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ════ TRACKING ════ -->
+  <div id="tracking" class="screen scrollable">
+    <div class="map-area">
+      <div class="map-bg-grid"></div>
+      <div class="map-road h" style="top:38%"></div>
+      <div class="map-road h" style="top:68%"></div>
+      <div class="map-road v" style="left:28%"></div>
+      <div class="map-road v" style="left:72%"></div>
+      <div class="map-glow-spot" style="width:180px;height:180px;top:5%;left:5%;transform:translate(-20%,-20%)"></div>
+      <div class="map-glow-spot" style="width:140px;height:140px;top:60%;right:0;transform:translateX(30%)"></div>
+      <div class="map-pin" style="top:42%; left:58%;">📍</div>
+      <div class="map-van" style="top:18%; left:18%;">🚐</div>
+      <svg class="map-route-svg" viewBox="0 0 393 270">
+        <path d="M 88 58 C 120 90 180 100 228 115" stroke="rgba(201,168,76,0.6)" stroke-width="2.5" fill="none" stroke-dasharray="7 5">
+          <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="1.2s" repeatCount="indefinite"/>
+        </path>
+        <circle cx="88" cy="58" r="5" fill="rgba(201,168,76,0.4)">
+          <animate attributeName="r" from="4" to="9" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+      <div class="map-overlay-top">
+        <div class="back-btn" onclick="goTo('home')" style="background:rgba(10,10,10,0.8);">‹</div>
+        <div style="background:rgba(10,10,10,0.75);padding:8px 14px;border-radius:12px;border:1px solid var(--border);">
+          <div class="gold-label">Live Tracking</div>
+        </div>
+      </div>
+      <div class="map-overlay-bottom"></div>
+    </div>
+
+    <div class="eta-hero anim-1">
+      <div class="eta-num">12</div>
+      <div class="eta-unit-stack">
+        <div class="eta-unit">Minutes</div>
+        <div class="eta-label">Away</div>
+      </div>
+      <div class="eta-divider"></div>
+      <div class="eta-details">
+        <div class="eta-detail-row">
+          <div class="eta-d-key">Arriving</div>
+          <div class="eta-d-val">3:42 PM</div>
+        </div>
+        <div class="eta-detail-row">
+          <div class="eta-d-key">Distance</div>
+          <div class="eta-d-val">2.4 km</div>
+        </div>
+        <div class="eta-detail-row">
+          <div class="eta-d-key">Order</div>
+          <div class="eta-d-val">#WG-2847</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps-card anim-2">
+      <div class="steps-card-title">Progress</div>
+      <div class="step-row done">
+        <div class="step-dot">✓</div>
+        <div class="step-body"><div class="step-ttl">Booking Confirmed</div><div class="step-sub">Order #WG-2847 · Premium Wash</div><div class="step-time">3:18 PM</div></div>
+      </div>
+      <div class="step-row done">
+        <div class="step-dot">✓</div>
+        <div class="step-body"><div class="step-ttl">Washer Assigned</div><div class="step-sub">Marco R. accepted your request</div><div class="step-time">3:20 PM</div></div>
+      </div>
+      <div class="step-row current">
+        <div class="step-dot">🚐</div>
+        <div class="step-body"><div class="step-ttl">On the Way</div><div class="step-sub">Marco is heading to your location</div><div class="step-time">Now</div></div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot">🧼</div>
+        <div class="step-body"><div class="step-ttl">Washing in Progress</div><div class="step-sub">Sit back and relax</div></div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot">✅</div>
+        <div class="step-body"><div class="step-ttl">Complete</div><div class="step-sub">Rate your experience</div></div>
+      </div>
+    </div>
+
+    <div class="washer-detail-card anim-3" onclick="goTo('washer-profile')">
+      <div class="wd-avatar">👨‍🔧</div>
+      <div class="wd-info">
+        <div class="wd-name">Marco Reyes</div>
+        <div class="wd-sub">Toyota Innova · ABC 1234</div>
+        <div class="wd-stars">★★★★★ 4.9 · 243 washes</div>
+      </div>
+      <div class="wd-actions">
+        <div class="wd-btn gold">📞</div>
+        <div class="wd-btn">💬</div>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+  </div>
+
+  <!-- ════ WASHER PROFILE ════ -->
+  <div id="washer-profile" class="screen scrollable">
+    <div class="wp-hero">
+      <div style="position:absolute;top:58px;left:24px;">
+        <div class="back-btn" onclick="goTo('tracking')">‹</div>
+      </div>
+      <div style="padding-top:50px;"></div>
+      <div class="wp-big-avatar">👨‍🔧<div class="wp-verified">✓</div></div>
+      <div class="wp-name">Marco Reyes</div>
+      <div class="wp-role">Certified Pro Washer</div>
+      <div class="wp-stars-row">
+        <div class="wp-stars-big">★★★★★</div>
+        <div class="wp-rating-num">4.9</div>
+        <div class="wp-rating-count">(243 reviews)</div>
+      </div>
+      <div class="wp-stats-row">
+        <div class="wp-stat"><div class="wp-stat-num">243</div><div class="wp-stat-lbl">Washes</div></div>
+        <div class="wp-stat"><div class="wp-stat-num">3 yrs</div><div class="wp-stat-lbl">Experience</div></div>
+        <div class="wp-stat"><div class="wp-stat-num">98%</div><div class="wp-stat-lbl">Completion</div></div>
+      </div>
+    </div>
+
+    <div class="wp-section">
+      <div class="wp-section-title">Specialties</div>
+      <div class="wp-services">
+        <div class="wp-service-chip"><span>💦</span> Quick Rinse</div>
+        <div class="wp-service-chip"><span>✨</span> Premium Wash</div>
+        <div class="wp-service-chip"><span>👑</span> Full Detail</div>
+        <div class="wp-service-chip"><span>💎</span> Ceramic Coat</div>
+        <div class="wp-service-chip"><span>🛡️</span> Paint Protection</div>
+      </div>
+    </div>
+
+    <div class="wp-section">
+      <div class="wp-section-title">Recent Reviews</div>
+      <div class="wp-reviews">
+        <div class="wp-review-card">
+          <div class="wpr-top">
+            <div class="wpr-avatar">😊</div>
+            <div><div class="wpr-name">Maria S.</div><div class="wpr-stars">★★★★★</div></div>
+            <div class="wpr-date">Mar 28</div>
+          </div>
+          <div class="wpr-text">Super bilis at maayos ang trabaho! Bago pa mukhang ang sasakyan ko pagkatapos. Highly recommend si Kuya Marco!</div>
+        </div>
+        <div class="wp-review-card">
+          <div class="wpr-top">
+            <div class="wpr-avatar">🧑</div>
+            <div><div class="wpr-name">Carlo M.</div><div class="wpr-stars">★★★★★</div></div>
+            <div class="wpr-date">Mar 25</div>
+          </div>
+          <div class="wpr-text">Very professional and on time. The full detail service was worth every peso. My SUV looks brand new!</div>
+        </div>
+        <div class="wp-review-card">
+          <div class="wpr-top">
+            <div class="wpr-avatar">👩</div>
+            <div><div class="wpr-name">Jessa R.</div><div class="wpr-stars">★★★★☆</div></div>
+            <div class="wpr-date">Mar 22</div>
+          </div>
+          <div class="wpr-text">Great service! Dumating on time at maingat sa paghugas. Will book again next week.</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="wp-book-btn" onclick="goTo('booking')">Book Marco Now →</button>
+    <div style="height:14px;"></div>
+  </div>
+
+  <!-- ════ RATING ════ -->
+  <div id="rating" class="screen scrollable">
+    <div class="rating-hero">
+      <div style="position:absolute;top:58px;left:24px;">
+        <div class="back-btn" onclick="goTo('home')">‹</div>
+      </div>
+      <div style="padding-top:50px;"></div>
+      <div class="rating-check">✅</div>
+      <div class="rating-title">Wash Complete!</div>
+      <div class="rating-sub">Your car is looking pristine 🚗✨</div>
+      <div class="rating-order">Order #WG-2847</div>
+    </div>
+
+    <div class="rating-washer-mini">
+      <div class="rwm-avatar">👨‍🔧</div>
+      <div class="rwm-info">
+        <div class="rwm-name">Marco Reyes</div>
+        <div class="rwm-service">Premium Wash · Today, 3:30 PM</div>
+      </div>
+    </div>
+
+    <div class="star-rating-section">
+      <div class="star-rating-label">How was your experience?</div>
+      <div class="stars-row">
+        <div class="star-btn" onclick="rateStar(1)">⭐</div>
+        <div class="star-btn" onclick="rateStar(2)">⭐</div>
+        <div class="star-btn" onclick="rateStar(3)">⭐</div>
+        <div class="star-btn" onclick="rateStar(4)">⭐</div>
+        <div class="star-btn" onclick="rateStar(5)">⭐</div>
+      </div>
+    </div>
+
+    <div class="quick-tags-section">
+      <div class="qt-label">What stood out?</div>
+      <div class="qt-row">
+        <div class="qt-tag" onclick="toggleTag(this)">⚡ Super Fast</div>
+        <div class="qt-tag" onclick="toggleTag(this)">✨ Spotless Clean</div>
+        <div class="qt-tag" onclick="toggleTag(this)">😊 Very Friendly</div>
+        <div class="qt-tag" onclick="toggleTag(this)">⏰ On Time</div>
+        <div class="qt-tag" onclick="toggleTag(this)">🛡️ Careful with Car</div>
+        <div class="qt-tag" onclick="toggleTag(this)">💯 Worth the Price</div>
+      </div>
+    </div>
+
+    <div class="comment-section">
+      <div class="sch-label" style="margin-bottom:10px;">Leave a comment (optional)</div>
+      <textarea class="comment-box" placeholder="Tell us more about your experience..."></textarea>
+    </div>
+
+    <button class="submit-rating-btn" onclick="goTo('home')">Submit Review →</button>
+    <div style="height:14px;"></div>
+  </div>
+
+  <!-- ════ PROFILE ════ -->
+  <div id="profile" class="screen scrollable">
+    <div class="profile-hero">
+      <div class="profile-hero-top">
+        <div class="profile-page-title">My Profile</div>
+        <div class="icon-btn">⚙️</div>
+      </div>
+      <div class="p-avatar-wrap">
+        <div class="p-avatar">😎</div>
+      </div>
+    </div>
+    <div class="p-name-section">
+      <div class="p-name">Juan dela Cruz</div>
+      <div class="p-sub">juan@email.com · +63 912 345 6789</div>
+      <div class="p-tier">♛ Gold Member</div>
+    </div>
+    <div class="p-stats">
+      <div class="p-stat"><div class="p-stat-num">24</div><div class="p-stat-lbl">Washes</div></div>
+      <div class="p-stat"><div class="p-stat-num">1,240</div><div class="p-stat-lbl">Points</div></div>
+      <div class="p-stat"><div class="p-stat-num">4.9</div><div class="p-stat-lbl">Rating</div></div>
+    </div>
+
+    <div class="p-menu-section">
+      <div class="p-menu-group-lbl">Account</div>
+      <div class="p-menu-list">
+        <div class="p-menu-item"><div class="p-menu-icon">🚗</div><div class="p-menu-body"><div class="p-menu-title">My Vehicles</div><div class="p-menu-sub">2 vehicles registered</div></div><div class="p-menu-right">›</div></div>
+        <div class="p-menu-item"><div class="p-menu-icon">💳</div><div class="p-menu-body"><div class="p-menu-title">Payment Methods</div><div class="p-menu-sub">GCash · Maya · Cash</div></div><div class="p-menu-right">›</div></div>
+        <div class="p-menu-item"><div class="p-menu-icon">📍</div><div class="p-menu-body"><div class="p-menu-title">Saved Addresses</div><div class="p-menu-sub">Home, Office</div></div><div class="p-menu-right">›</div></div>
+      </div>
+    </div>
+    <div class="p-menu-section" style="margin-top:14px;">
+      <div class="p-menu-group-lbl">Rewards</div>
+      <div class="p-menu-list">
+        <div class="p-menu-item"><div class="p-menu-icon">🎁</div><div class="p-menu-body"><div class="p-menu-title">Promo Codes</div><div class="p-menu-sub">1 active code</div></div><div class="p-menu-right">›</div></div>
+        <div class="p-menu-item"><div class="p-menu-icon">⭐</div><div class="p-menu-body"><div class="p-menu-title">Loyalty Points</div><div class="p-menu-sub">1,240 pts · ₱62 value</div></div><div class="p-menu-right">›</div></div>
+      </div>
+    </div>
+    <div class="p-menu-section" style="margin-top:14px;">
+      <div class="p-menu-group-lbl">Support</div>
+      <div class="p-menu-list">
+        <div class="p-menu-item"><div class="p-menu-icon">💬</div><div class="p-menu-body"><div class="p-menu-title">Help Center</div><div class="p-menu-sub">FAQs &amp; live chat</div></div><div class="p-menu-right">›</div></div>
+        <div class="p-menu-item" onclick="goTo('splash')"><div class="p-menu-icon">🚪</div><div class="p-menu-body"><div class="p-menu-title">Sign Out</div></div><div class="p-menu-right" style="color:#8a4040;">›</div></div>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+  </div>
+
+  <!-- ════ BOTTOM NAV ════ -->
+  <div class="bottom-nav" id="bottomNav" style="display:none;">
+    <div class="nav-item active" id="nav-home" onclick="navTo('home')">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-lbl">Home</div>
+    </div>
+    <div class="nav-item" id="nav-orders" onclick="navTo('tracking')">
+      <div class="nav-icon">📋</div>
+      <div class="nav-lbl">Orders</div>
+      <div class="nav-badge"></div>
+    </div>
+    <button class="nav-fab" onclick="goTo('booking')">＋</button>
+    <div class="nav-item" id="nav-track" onclick="navTo('tracking')">
+      <div class="nav-icon">📍</div>
+      <div class="nav-lbl">Track</div>
+    </div>
+    <div class="nav-item" id="nav-profile" onclick="navTo('profile')">
+      <div class="nav-icon">👤</div>
+      <div class="nav-lbl">Profile</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Navigation ──
+let currentScreen = 'splash';
+const noNavScreens = ['splash', 'washer-profile'];
+
+function goTo(id) {
+  const old = document.getElementById(currentScreen);
+  const next = document.getElementById(id);
+  if (!old || !next) return;
+  old.classList.remove('active');
+  next.classList.add('active');
+  currentScreen = id;
+  const nav = document.getElementById('bottomNav');
+  nav.style.display = noNavScreens.includes(id) ? 'none' : 'flex';
+  updateNavActive(id);
+  // Reset scroll
+  if (next.classList.contains('scrollable')) next.scrollTop = 0;
+}
+
+function navTo(id) { goTo(id); }
+
+function updateNavActive(id) {
+  ['nav-home','nav-orders','nav-track','nav-profile'].forEach(n => {
+    document.getElementById(n)?.classList.remove('active');
+  });
+  const map = { home:'nav-home', tracking:'nav-track', profile:'nav-profile' };
+  if (map[id]) document.getElementById(map[id])?.classList.add('active');
+}
+
+// ── Booking Wizard ──
+let wizStep = 0;
+let wizBasePrice = 150;
+let wizAddons = 0;
+let wizPkgName = 'Quick Rinse';
+const STEPS = 5;
+
+function updateWizardUI() {
+  // Dots & lines
+  for (let i = 0; i < STEPS; i++) {
+    const dot = document.getElementById('wd' + i);
+    const lbl = document.getElementById('wlbl' + i);
+    if (!dot) continue;
+    dot.classList.remove('done','active');
+    lbl?.classList.remove('done','active');
+    if (i < wizStep) { dot.classList.add('done'); dot.textContent = '✓'; lbl?.classList.add('done'); }
+    else if (i === wizStep) { dot.classList.add('active'); dot.textContent = i+1; lbl?.classList.add('active'); }
+    else { dot.textContent = i+1; }
+    const line = document.getElementById('wl' + i);
+    if (line) line.classList.toggle('done', i < wizStep);
+  }
+  // Slides
+  for (let i = 0; i < STEPS; i++) {
+    const slide = document.getElementById('ws' + i);
+    if (!slide) continue;
+    slide.classList.remove('active', 'exit-left');
+    if (i === wizStep) slide.classList.add('active');
+    else if (i < wizStep) slide.classList.add('exit-left');
+  }
+  // Footer
+  const backBtn = document.getElementById('wiz-back-btn');
+  const nextBtn = document.getElementById('wiz-next-btn');
+  backBtn.style.display = wizStep > 0 ? 'flex' : 'none';
+  nextBtn.textContent = wizStep === STEPS - 1 ? 'Confirm Booking ✓' : 'Continue →';
+  // Update review
+  if (wizStep === 4) {
+    document.getElementById('rs-pkg').textContent = wizPkgName;
+    document.getElementById('rs-addons').textContent = wizAddons > 0 ? '₱' + wizAddons : 'None';
+    document.getElementById('rs-total').textContent = '₱' + (wizBasePrice + wizAddons + 20);
+  }
+}
+
+function wizNext() {
+  if (wizStep < STEPS - 1) { wizStep++; updateWizardUI(); }
+  else { goTo('tracking'); wizStep = 0; updateWizardUI(); }
+}
+
+function wizBack() {
+  if (wizStep > 0) { wizStep--; updateWizardUI(); }
+}
+
+function selectWizardPkg(el, price, name) {
+  document.querySelectorAll('.pkg-select-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  wizBasePrice = price;
+  wizPkgName = name;
+}
+
+function selectVehicle(el) {
+  document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectDate(el) {
+  document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectTime(el) {
+  document.querySelectorAll('.time-chip:not(.unavail)').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function toggleAddon(el, price) {
+  el.classList.toggle('selected');
+  wizAddons = Array.from(document.querySelectorAll('.addon-card.selected'))
+    .reduce((s,c) => s + parseInt(c.querySelector('.addon-price').textContent.replace(/[^\d]/g,'')), 0);
+}
+
+function selectPay(el) {
+  document.querySelectorAll('.pay-option').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── Star Rating ──
+let currentRating = 0;
+function rateStar(n) {
+  currentRating = n;
+  document.querySelectorAll('.star-btn').forEach((s,i) => {
+    s.classList.toggle('lit', i < n);
+  });
+}
+
+function toggleTag(el) { el.classList.toggle('selected'); }
+
+updateWizardUI();
+</script>
+</body>
+</html>
